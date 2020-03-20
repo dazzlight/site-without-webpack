@@ -1,21 +1,38 @@
-function turnOn() {
-  const bulbOnText = document.getElementById("lightText");
-  let color = document.getElementsByName("color")[0].value;
-  if (!color) {
-    color = "#ffbe00";
-  }
-  const bulbOn = document.querySelector(".fas, .fa-lightbulb");
-  bulbOn.style.color = color;
-  document.body.style.backgroundColor = "white";
-  bulbOnText.innerHTML = "Bulb is: ON";
-  bulbOnText.style.color = "black";
+let randomNumber;
+function init() {
+  randomNumber = getRandomNumber(10);
+  const input = document.getElementById("checkboxField");
+  const checkBtn = document.getElementById("checkBtn");
+
+  checkBtn.addEventListener("click", () => {
+    checkNumber(input, randomNumber);
+  });
 }
 
-function turnOff() {
-  document.body.style.backgroundColor = "grey";
-  const bulbOnText = document.getElementById("lightText");
-  const bulbOn = document.querySelector(".fas, .fa-lightbulb");
-  bulbOnText.innerHTML = "Bulb is: OFF";
-  bulbOnText.style.color = "white";
-  bulbOn.style.color = "black";
+function checkNumber(input, number) {
+  if (input.value == "") {
+    alert("Please add number!");
+  } else {
+    checkValues(input, number);
+  }
+}
+
+function checkValues(input, number) {
+  const p = document.getElementById("status");
+  if (input.value > number) {
+    p.innerHTML = "Your number is greather than Random Number";
+    p.className = "wrong";
+  } else if (input.value < number) {
+    p.innerHTML = "Your number is less than Random Number";
+    p.className = "wrong";
+  } else {
+    p.innerHTML = `You won! I was thinking about ${number}!`;
+    p.className = "success";
+    input.value = "";
+    randomNumber = getRandomNumber(10);
+  }
+}
+
+function getRandomNumber(n) {
+  return Math.floor(Math.random() * n + 1);
 }
