@@ -4,22 +4,18 @@
     <title>Website without webpack</title>
     <link rel="stylesheet" type="text/css" href="styles/styles.css" />
     <script type="text/javascript" src="scripts/script.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
   </head>
   <body>
-    <section>
-      <h1 id="lightText">Bulb is: OFF</h1>
-      <i class="fas fa-lightbulb"></i>
-      <br />
-      <input
-        type="text"
-        value="#ffbe00"
-        name="color"
-        placeholder="Valid color"
-      />
-      <br />
-      <button onclick="turnOn()">turn on</button>
-      <button onclick="turnOff()">turn off</button>
-    </section>
+    <h3>Guess the number</h3>
+    <h4>From 1 to 10</h4>
+    <input type="text" placeholder="Your Number" id="checkboxField" />
+    <button type="button" id="checkBtn">Check!</button>
+    <p id="status">Please, provide number and press button</p>
   </body>
+  <script>
+    (function() {
+      console.log("document ready");
+      init();
+    })();
+  </script>
 </html>
