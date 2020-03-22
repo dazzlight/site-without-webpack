@@ -1,48 +1,109 @@
-const age = 17;
-
-// 1) Проверьте переменную age и если возраст больше или равен 18 и меньше или равен 21, выведите в консоль соответсвующее сообщение
-age >= 18 || age <= 21 ? console.log("true") : console.log("false");
-
-const users = [
-  {
-    name: "Roman",
-    age: 28,
-    visitedPark: true,
-    boughtItems: false
-  },
-  {
-    name: "Maya",
-    age: 14,
-    visitedPark: false,
-    boughtItems: true
-  },
-  {
-    name: "Alex",
-    age: 45,
-    visitedPark: false,
-    boughtItems: false
-  },
-  {
-    name: "Tonia",
-    age: 32,
-    visitedPark: true,
-    boughtItems: true
-  }
-];
-
-// 2) Для каждого элемента массива users выведите сообщение в консоль, только если пользователь посетил парк или совершил покупку
-// Используйте foreach или for, а потом if внутри петли
-users.forEach(user => {
-  if (user.visitedPark == true || user.boughtItems == true) {
-    console.log(user);
-  }
-});
-
-let iterationCounter = "Each iteration adds a *: ";
-for (let i = 0; i < 10; i++) {
-  iterationCounter += " *";
-
-  // 3) Используя assigment operator(+=) поменяйте значение переменоой iterationCounter, добавляя по одной звездочке при каждой итерации
+function displayData(clientsList = clients) {
+  const ul = document.querySelector("#clientsData");
+  clientsList.forEach(client => {
+    ul.appendChild(getLiElement(client));
+  });
+  sumAmount(clientsList);
 }
-// 4) Выведите в консоль значение iterationCounter. Ожидаемый результат "Each iteration adds a *: * * * * * * * * * *"
-console.log(iterationCounter);
+
+function getLiElement(client) {
+  const newLi = document.createElement("li");
+  const avatar = document.createElement("img");
+  newLi.className = "media";
+
+  avatar.className = "mr-3 align-self-center";
+  avatar.setAttribute("src", client.avatar);
+
+  newLi.appendChild(avatar);
+  newLi.appendChild(createClientDescription(client));
+  return newLi;
+}
+
+function createClientDescription(client) {
+  const div = document.createElement("div");
+  div.className = "media-body";
+
+  const mailLink = document.createElement("a");
+  mailLink.setAttribute("href", `mailto:${client.email}`);
+  mailLink.innerHTML = client.email;
+  const textPart1 = document.createTextNode(
+    `${client.lastName} ${client.firstName} - `
+  );
+  const textPart2 = document.createTextNode(
+    ` ${client.gender} (${client.date} - ${client.amount})`
+  );
+  div.appendChild(textPart1);
+  div.appendChild(mailLink);
+  div.appendChild(textPart2);
+
+  return div;
+}
+
+function sortList(order) {
+  const sortedClients = clients.sort((lastClient, nextClient) => {
+    if (order == "ascending") {
+      return lastClient.lastName > nextClient.lastName ? 1 : -1;
+    } else {
+      return lastClient.lastName < nextClient.lastName ? 1 : -1;
+    }
+  });
+  refreshData(sortedClients);
+}
+
+function refreshData(updatedClients) {
+  clearList();
+  displayData(updatedClients);
+}
+
+function clearList() {
+  const ul = document.querySelector("#clientsData");
+  while (ul.firstChild) {
+    ul.removeChild(ul.firstChild);
+  }
+}
+
+function filterList() {
+  const filterString = document
+    .querySelector("#filterInput")
+    .value.toLowerCase()
+    .trim();
+  if (filterString) {
+    const filteredClients = clients.filter(client => {
+      return (
+        client.firstName.toLowerCase().includes(filterString) ||
+        client.lastName.toLowerCase().includes(filterString) ||
+        client.email.toLowerCase().includes(filterString)
+      );
+    });
+    refreshData(filteredClients);
+    filteredClients.length === 0
+      ? showNotFoundSection()
+      : showResultListSection();
+  } else {
+    refreshData(clients);
+    showResultListSection();
+  }
+}
+
+function sumAmount(clientsList = clients) {
+  const total = clientsList.reduce((amount, client) => {
+    return amount + removeCurrencyFromAmount(client.amount);
+  }, 0);
+  document.querySelectorAll(".totalAmountContainer").forEach(element => {
+    element.innerHTML = total.toFixed(2);
+  });
+}
+
+function removeCurrencyFromAmount(amount) {
+  return Number(amount.slice(1));
+}
+
+function showNotFoundSection() {
+  document.querySelector(".resultList").style.display = "none";
+  document.querySelector(".notFound").style.display = "block";
+}
+
+function showResultListSection() {
+  document.querySelector(".resultList").style.display = "block";
+  document.querySelector(".notFound").style.display = "none";
+}
